@@ -41,6 +41,7 @@ app.include_router(question.router)
 app.include_router(user.router)
 app.include_router(spot.router)
 
+
 class ChatInput(BaseModel):
     message: str
 
@@ -67,8 +68,6 @@ async def chat(chat_input: ChatInput):
                 "role": "user",
                 "content": user_message,
             }
-            # },
-            # {"role": "assistant", "content": "제주도는 한국의 아름다운 섬이야"},
         ],
     )
 
@@ -94,8 +93,6 @@ async def chat(chat_input: ChatInput):
                 "role": "user",
                 "content": user_message,
             }
-            # },
-            # {"role": "assistant", "content": "제주도는 한국의 아름다운 섬이야"},
         ],
     )
 
