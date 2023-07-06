@@ -57,7 +57,8 @@ def get_spot(mbti: str, response: Response):
         }
         spot_list.append(spot_data)
     response.headers["Content-Type"] = "application/json"
-    return spot_list
+    res_doc = {"data": spot_list}
+    return res_doc
 
 
 @router.get("/spot/{mbti}/chat")
