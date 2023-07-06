@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from modules.logger import setup_logger
+from modules.routers import question
+from modules.routers import user
 
 # Load environment variables from .env file
 load_dotenv()
@@ -32,6 +34,9 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
 )
+
+app.include_router(question.router)
+app.include_router(user.router)
 
 
 class ChatInput(BaseModel):
