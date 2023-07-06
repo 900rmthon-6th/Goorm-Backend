@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from modules.logger import setup_logger
 from modules.routers import question
 from modules.routers import user
+from modules.routers import spot
 
 # Load environment variables from .env file
 load_dotenv()
@@ -38,6 +39,7 @@ app.add_middleware(
 # Include the routers
 app.include_router(question.router)
 app.include_router(user.router)
+app.include_router(spot.router)
 
 class ChatInput(BaseModel):
     message: str

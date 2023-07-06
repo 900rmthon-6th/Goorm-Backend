@@ -3,7 +3,6 @@ from pymongo import MongoClient
 from pymongo.database import Database
 from pymongo.collection import Collection
 from dotenv import load_dotenv
-import json
 import os
 
 load_dotenv()
@@ -27,12 +26,12 @@ def close_mongo_connection():
     global mongo_client
     mongo_client.close()
 
+
 @router.get("/mbti")
 def get_mbti_count(response: Response):
     connect_to_mongo()
     mbti_count = mbti_collection.count_documents({})
     return mbti_count
-
 
 
 @router.get("/mbti/{qid}")
