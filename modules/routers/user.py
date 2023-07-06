@@ -1,8 +1,11 @@
+from collections import Counter
 from fastapi import APIRouter, Response
 from pydantic import BaseModel
 
 import json
+import logging
 import openai
+import re
 
 router = APIRouter()
 
@@ -39,10 +42,29 @@ def create_user_mbti(user_data: UserMBTIInput, response: Response):
         ],
     )
 
-    print(completion)
     completion_json = json.loads(str(completion))
     print(completion_json)
+    chat_content = completion_json["choices"][0]["message"]["content"]
+    print(chat_content)
 
-    chat_result = completion_json
+    chat_content_str = str(chat_content)
+    mbti_matches = re.findall(r"([A-Z]{4})", chat_content_str)
+
+    res_doc = {}
+    if mbti_matches:
+        mbti_counter = Counter(mbti_matches)
+        mbti_counter['MBTI'] = 0
+        print(mbti_counter)
+        most_common_mbti = mbti_counter.most_common(1)[0][0]
+        print("추출된 MBTI 유형:", most_common_mbti)
+        res_doc["mbti"] = most_common_mbti
+    else:
+        print("MBTI 유형을 찾을 수 없습니다.")
+        res_doc["mbti"] = "MBTI 유형을 찾을 수 없습니다."
+
+    # MBTI를 선택한 사유
+    res_doc["reason"] = chat_content_str
+
+    chat_result = res_doc
     response.headers["Content-Type"] = "application/json"
     return chat_result
