@@ -35,9 +35,9 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
+# Include the routers
 app.include_router(question.router)
 app.include_router(user.router)
-
 
 class ChatInput(BaseModel):
     message: str
