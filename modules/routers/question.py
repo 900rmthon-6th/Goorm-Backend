@@ -33,6 +33,6 @@ def get_mbti(qid: str):
     connect_to_mongo()  # Ensure connection is established
     mbti_doc = mbti_collection.find_one({"qid": qid})
     if mbti_doc:
-        return {"message": f"MBTI document found: {mbti_doc}"}
+        return {mbti_doc}
     else:
         return {"message": "MBTI document not found"}
