@@ -3,7 +3,6 @@ from fastapi import APIRouter, Response
 from pydantic import BaseModel
 
 import json
-import logging
 import openai
 import re
 
@@ -14,11 +13,18 @@ class UserMBTIInput(BaseModel):
     uid: str
     ans: list[str]
 
+def ans_prompt_converter(ans):
+    for mbti_ans in ans:
+        print(mbti_ans)
+
+
 
 @router.post("/user/mbti")
 def create_user_mbti(user_data: UserMBTIInput, response: Response):
     uid = user_data.uid
     ans = user_data.ans
+
+    ans = ans_prompt_converter(ans)
 
     user_msg = "MBTI는 Myers-Briggs 유형 지표로써, 총 16가지의 성격유형이 존재해. 특정 사람을 인터뷰한 결과, 그는 여행을 할때 다음과 같은 행동을 선택한다고 답변했어. 이는 아래에 [주요 선택사항]이라는 이름으로 총 8가지의 답변을 전달해줄게. 이를 모두 읽어보고 핵심내용을 정리해서, 16가지 성격유형 중 하나로 선택해줘."
     user_msg += f"\n[주요 선택사항]\n{ans}"

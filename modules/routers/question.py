@@ -47,7 +47,8 @@ def get_all_mbti(response: Response):
         }
         mbti_list.append(filtered_doc)
     response.headers["Content-Type"] = "application/json"
-    return mbti_list
+    res_doc = {"data" : mbti_list}
+    return res_doc
 
 
 @router.get("/mbti/{qid}")
