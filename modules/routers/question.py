@@ -1,8 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from pymongo import MongoClient
 from pymongo.database import Database
 from pymongo.collection import Collection
 from dotenv import load_dotenv
+import json
 import os
 
 load_dotenv()
@@ -17,7 +18,6 @@ mbti_collection: Collection
 def connect_to_mongo():
     global mongo_client, database, mbti_collection
     mongo_uri = os.getenv("MONGODB_URI")
-    print(mongo_uri)
     mongo_client = MongoClient(mongo_uri)
     database = mongo_client.get_database("snsn")
     mbti_collection = database.get_collection("mbti")
@@ -29,10 +29,17 @@ def close_mongo_connection():
 
 
 @router.get("/mbti/{qid}")
-def get_mbti(qid: str):
+def get_mbti(qid: str, response: Response):
     connect_to_mongo()  # Ensure connection is established
     mbti_doc = mbti_collection.find_one({"qid": qid})
     if mbti_doc:
-        return {mbti_doc}
+        filtered_doc = {
+            "qid": mbti_doc.get("qid"),
+            "que": mbti_doc.get("que"),
+            "ans": mbti_doc.get("ans"),
+        }
+        response.headers["Content-Type"] = "application/json"
+        return filtered_doc
     else:
+        response.status_code = 404
         return {"message": "MBTI document not found"}
