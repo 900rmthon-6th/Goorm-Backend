@@ -49,3 +49,19 @@ def get_mbti(qid: str, response: Response):
     else:
         response.status_code = 404
         return {"message": "MBTI document not found"}
+
+
+@router.get("/mbti/all")
+def get_all_mbti(response: Response):
+    connect_to_mongo()
+    mbti_docs = mbti_collection.find({})
+    mbti_list = []
+    for mbti_doc in mbti_docs:
+        filtered_doc = {
+            "qid": mbti_doc.get("qid"),
+            "que": mbti_doc.get("que"),
+            "ans": mbti_doc.get("ans"),
+        }
+        mbti_list.append(filtered_doc)
+    response.headers["Content-Type"] = "application/json"
+    return mbti_list
