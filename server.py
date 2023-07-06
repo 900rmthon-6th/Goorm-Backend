@@ -1,19 +1,37 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-import logging
-from modules.logger import setup_logger
-import openai
 import json
+import logging
+import openai
+import os
+
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+from modules.logger import setup_logger
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Setup logger
 logger = logging.getLogger(__name__)
 setup_logger(logger)
 
 # Initialize the OpenAI ChatGPT model
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 model_name = "gpt-3.5-turbo"
 
+# Create the FastAPI application
 app = FastAPI()
+
+# Enable CORS (Cross-Origin Resource Sharing)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 
 class ChatInput(BaseModel):
